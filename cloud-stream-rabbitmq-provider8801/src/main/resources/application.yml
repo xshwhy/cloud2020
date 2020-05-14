@@ -1,0 +1,39 @@
+server:
+  port: 8801
+
+spring:
+  application:
+    name: cloud-stream-provider
+  cloud:
+      stream:
+        binders:  # \u8BBE\u7F6E\u9700\u8981\u7ED1\u5B9A\u7684rabbitmq\u7684\u670D\u52A1\u4FE1\u606F
+          defaultRabbit: # \u8868\u793A\u5B9A\u4E49\u7684\u540D\u79F0\uFF0C\u7528\u4E8Ebingding\u96C6\u5408
+            type: rabbit  # \u6D88\u606F\u7EC4\u4EF6\u7C7B\u578B\u662FRabbitMQ
+            environment:  # \u8BBE\u7F6ERabbitMQ\u7684\u73AF\u5883\u53D8\u91CF
+              spring:
+                rabbitmq:
+                  host: 120.26.142.247
+                  port: 5672
+                  username: guest
+                  password: guest
+                  virtual_host: /
+        bindings:  # \u670D\u52A1\u7684\u6574\u5408\u5904\u7406
+          input:  # \u8FD9\u4E2A\u540D\u5B57\u662F\u4E00\u4E2A\u901A\u9053\u7684\u540D\u79F0
+            destination: output  # \u8868\u793A\u8981\u4F7F\u7528\u7684Exchange\u540D\u79F0
+            content-type: application/json  # \u8BBE\u7F6E\u6D88\u606F\u7C7B\u578B\uFF0C\u672C\u6B21\u4E3Ajson\uFF0C\u6587\u672C\u5219\u8BBE\u7F6E\u201Ctext/plain"
+            binder: defaultRabbit # \u8BBE\u7F6E\u8981\u7ED1\u5B9A\u7684\u6D88\u606F\u670D\u52A1\u7684\u5177\u4F53\u8BBE\u7F6E
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 2 # \u8BBE\u7F6E\u5FC3\u8DF3\u7684\u95F4\u9694\u65F6\u95F4\uFF0C\u9ED8\u8BA430
+    lease-expiration-duration-in-seconds: 5 # \u8D85\u8FC75\u79D2\u95F4\u9694\uFF0C\u9ED8\u8BA490
+    instance-id: receive-8801.com #\u4E3B\u673A\u540D
+    prefer-ip-address: true # \u663E\u793Aip
+
+management:
+  health:
+    rabbit:
+      enabled: false
